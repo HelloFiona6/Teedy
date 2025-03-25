@@ -80,13 +80,25 @@
       </snapshots>
     </repository>
   </repositories>
-
+  <distributionManagement>
+  <site>
+    <id>local</id>
+    <url>file://${project.build.directory}/site</url>
+  </site>
+</distributionManagement>
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
         <version>${org.apache.maven.plugins.maven-antrun-plugin.version}</version>
+      </plugin>
+
+      <!-- Maven Site Plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.9.1</version>
       </plugin>
 
       <plugin>
@@ -491,4 +503,7 @@
     </dependencies>
   </dependencyManagement>
 
+<!--  <reporting>-->
+<!--    <excludeDefaults>true</excludeDefaults>-->
+<!--  </reporting>-->
 </project>
