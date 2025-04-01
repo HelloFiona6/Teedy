@@ -81,12 +81,26 @@
     </repository>
   </repositories>
 
+  <distributionManagement>
+  <site>
+    <id>local</id>
+    <url>file://${project.build.directory}/site</url>
+  </site>
+</distributionManagement>
+
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
         <version>${org.apache.maven.plugins.maven-antrun-plugin.version}</version>
+      </plugin>
+
+      <!-- Maven Site Plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.9.1</version>
       </plugin>
 
       <plugin>
@@ -115,6 +129,27 @@
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
         <version>${org.eclipse.jetty.jetty-maven-plugin.version}</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>3.23.0</version>
+        <configuration>
+          <rulesets>
+<!--            <ruleset>/rulesets/java/quickstart.xml</ruleset>-->
+            <ruleset>customize-rules.xml</ruleset>
+          </rulesets>
+          <failOnViolation>false</failOnViolation>
+        </configuration>
+        <executions>
+          <execution>
+<!--            <phase>verify</phase>-->
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -490,5 +525,25 @@
 
     </dependencies>
   </dependencyManagement>
+
+  <reporting>
+    <plugins>
+      <!-- 生成 PMD 报告 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>3.23.0</version>
+        <configuration>
+          <rulesets>
+<!--            <ruleset>/rulesets/java/quickstart.xml</ruleset> &lt;!&ndash; 使用内置规则集 &ndash;&gt;-->
+            <ruleset>customize-rules.xml</ruleset>
+            <!-- 或自定义规则文件 -->
+            <!-- <ruleset>src/main/resources/pmd-ruleset.xml</ruleset> -->
+          </rulesets>
+<!--          <linkXRef>true</linkXRef> &lt;!&ndash; 链接到源代码 &ndash;&gt;-->
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 
 </project>
