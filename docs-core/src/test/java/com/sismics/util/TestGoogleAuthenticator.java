@@ -22,5 +22,7 @@ public class TestGoogleAuthenticator {
         Assert.assertEquals(5, key.getScratchCodes().size());
         int validationCode = gAuth.calculateCode(key.getKey(), new Date().getTime() / 30000);
         Assert.assertTrue(gAuth.authorize(key.getKey(), validationCode));
+        //
+//        Assert.assertTrue(gAuth.authorize(null, validationCode));
     }
 }
