@@ -84,7 +84,7 @@ public class UserResource extends BaseResource {
         if (!authenticate()) {
             throw new ForbiddenClientException();
         }
-        checkBaseFunction(BaseFunction.ADMIN);
+        checkBaseFunction(BaseFunction.ADMIN); // 只有管理员能注册
         
         // Validate the input data
         username = ValidationUtil.validateLength(username, "username", 3, 50);

@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <h3 class="modal-title">新用户注册</h3>
+  </div>
+  <div class="modal-body">
+    <form name="registerForm">
+      <div class="form-group">
+        <label>用户名</label>
+        <input type="text" ng-model="register.username" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label>密码</label>
+        <input type="password" ng-model="register.password" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label>邮箱</label>
+        <input type="email" ng-model="register.email" required class="form-control">
+      </div>
+    </form>
+    <button class="btn btn-link" ng-click="openCheckStatus()">查询注册进度</button>
+    <div ng-if="registerStatus">
+      <div class="alert alert-info">{{registerStatus}}</div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="submitRegister()" ng-disabled="registerForm.$invalid">提交注册请求</button>
+    <button class="btn btn-default" ng-click="$dismiss()">取消</button>
+  </div>

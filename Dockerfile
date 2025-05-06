@@ -60,7 +60,7 @@ RUN wget -nv -O /tmp/jetty.tar.gz \
     && mkdir /opt/jetty/webapps \
     && chmod +x /opt/jetty/bin/jetty.sh
 
-EXPOSE 8080
+EXPOSE 
 
 # Install app
 RUN mkdir /app && \

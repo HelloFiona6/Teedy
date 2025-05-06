@@ -417,6 +417,11 @@ angular.module('docs',
           controller: 'GroupProfile'
         }
       }
+    })
+    .state('register-request-admin', {
+      url: '/register-request-admin',
+      templateUrl: 'partial/docs/registerrequestadmin.html',
+      controller: 'RegisterRequestAdmin'
     });
 
   // Configuring Restangular

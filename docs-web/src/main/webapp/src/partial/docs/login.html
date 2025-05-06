@@ -79,6 +79,9 @@
           <button type="submit" class="btn btn-default btn-block" ng-if="app.guest_login" ng-click="loginAsGuest()">
             <span class="fas fa-user"></span> {{ 'login.login_as_guest' | translate }}
           </button>
+
+          <button type="reset" class="btn btn-link" ng-click="openRegisterRequest()">新用户注册</button>
+          <button type="button" class="btn btn-link" ng-click="openRegisterRequestStatus()">查询注册进度</button>
         </form>
       </div>
     </div>

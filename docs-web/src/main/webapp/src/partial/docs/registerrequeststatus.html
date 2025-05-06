@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <h3 class="modal-title">查询注册进度</h3>
+  </div>
+  <div class="modal-body">
+    <form ng-submit="checkStatus()">
+      <div class="form-group">
+        <label>注册请求ID</label>
+        <input type="text" class="form-control" ng-model="requestId" required>
+      </div>
+      <button type="submit" class="btn btn-primary">查询</button>
+      <button type="button" class="btn btn-default" ng-click="$dismiss()">关闭</button>
+    </form>
+    <div ng-if="statusMsg" class="alert alert-info" style="margin-top:10px;">
+      {{statusMsg}}
+    </div>
+  </div>

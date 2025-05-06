@@ -75,4 +75,18 @@ angular.module('docs').controller('Login', function(Restangular, $scope, $rootSc
       });
     });
   };
+
+  $scope.openRegisterRequest = function () {
+    $uibModal.open({
+      templateUrl: 'partial/docs/registerrequest.html',
+      controller: 'RegisterRequestModal'
+    });
+  };
+
+  $scope.openRegisterRequestStatus = function() {
+    $uibModal.open({
+      templateUrl: 'partial/docs/registerrequeststatus.html',
+      controller: 'RegisterRequestStatusModal'
+    });
+  };
 });

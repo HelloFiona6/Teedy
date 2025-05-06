@@ -76,7 +76,7 @@ public class UserDao {
         Query q = em.createQuery("select u from User u where u.username = :username and u.deleteDate is null");
         q.setParameter("username", user.getUsername());
         List<?> l = q.getResultList();
-        if (l.size() > 0) {
+        if (!l.isEmpty()) {
             throw new Exception("AlreadyExistingUsername");
         }
         

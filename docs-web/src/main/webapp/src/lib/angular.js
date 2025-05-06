@@ -13957,11 +13957,11 @@
      * var host = $location.host();
      * // => "example.com"
      *
-     * // given URL http://user:password@example.com:8080/#/some/path?foo=bar&baz=xoxo
+     * // given URL http://user:password@example.com:9000/#/some/path?foo=bar&baz=xoxo
      * host = $location.host();
      * // => "example.com"
      * host = location.host;
-     * // => "example.com:8080"
+     * // => "example.com:9000"
      * ```
      *
      * @return {string} host of current URL.
