@@ -64,8 +64,8 @@ EXPOSE 8080
 
 # Install app
 RUN mkdir /app && \
-    cd /app && \
-    java -jar /opt/jetty/start.jar --add-modules=server,http,webapp,deploy
+ cd /app && \
+ java -jar /opt/jetty/start.jar --add-modules=server,http,webapp,deploy
 
 ADD docs.xml /app/webapps/docs.xml
 ADD docs-web/target/docs-web-*.war /app/webapps/docs.war
