@@ -7615,7 +7615,7 @@
      * - protocol and hostname
      *
      * If <base href='/base/index.html'>, this returns '/base'.
-     * If <base href='http://localhost:9000/base/index.html'>, this returns '/base'.
+     * If <base href='http://localhost:/base/index.html'>, this returns '/base'.
      *
      * See: https://html.spec.whatwg.org/dev/semantics.html#the-base-element
      */

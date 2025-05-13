@@ -1,6 +1,7 @@
 package com.sismics.docs.core.dao;
 
 import com.sismics.docs.core.model.jpa.UserRegistrationRequest;
+//import com.sismics.docs.core.model.jpa.*;
 import com.sismics.util.context.ThreadLocalContext;
 
 import jakarta.persistence.EntityManager;

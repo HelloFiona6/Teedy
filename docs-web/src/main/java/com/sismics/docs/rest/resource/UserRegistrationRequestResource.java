@@ -1,6 +1,7 @@
 package com.sismics.docs.rest.resource;
 
 import com.sismics.docs.core.dao.UserRegistrationRequestDao;
+// import com.sismics.docs.core.dao.*;
 import com.sismics.docs.rest.constant.BaseFunction;
 import com.sismics.docs.core.dao.UserDao;
 import com.sismics.docs.core.model.jpa.UserRegistrationRequest;
@@ -21,8 +22,8 @@ public class UserRegistrationRequestResource extends BaseResource {
      * Guest submits a registration request.
      */
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response registerRequest(UserRegistrationRequest req) {
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
+    public Response registerRequest(@BeanParam UserRegistrationRequest req) {
         // Basic validation
         if (req.getUsername() == null || req.getPassword() == null || req.getEmail() == null) {
             throw new ClientException("ValidationError", "Username, password, and email are required");
