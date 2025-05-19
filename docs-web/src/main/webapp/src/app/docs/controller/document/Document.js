@@ -23,7 +23,7 @@ angular.module('docs').controller('Document', function ($scope, $rootScope, $tim
   // A timeout promise is used to slow down search requests to the server
   // We keep track of it for cancellation purpose
   var timeoutPromise;
-  
+  //
   /**
    * Load new documents page.
    */

@@ -1,0 +1,9 @@
+2025-05-14 22:32:21 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "T_CONFIG" not found; SQL statement:
+select c.CFG_VALUE_C from T_CONFIG c where c.CFG_ID_C='DB_VERSION' [42102-199]
+2025-05-14 22:35:11 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "T_USER_REGISTRATION_REQUEST" not found; SQL statement:
+select urr1_0.URR_ID_C,urr1_0.URR_ADMIN_COMMENT_C,urr1_0.URR_CREATEDATE_D,urr1_0.URR_EMAIL_C,urr1_0.URR_PASSWORD_C,urr1_0.URR_STATUS_C,urr1_0.URR_USERNAME_C from T_USER_REGISTRATION_REQUEST urr1_0 where urr1_0.URR_USERNAME_C=? [42102-199]
+2025-05-15 10:39:24 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "T_USER_REGISTRATION_REQUEST" not found; SQL statement:
+select urr1_0.URR_ID_C,urr1_0.URR_ADMIN_COMMENT_C,urr1_0.URR_CREATEDATE_D,urr1_0.URR_EMAIL_C,urr1_0.URR_PASSWORD_C,urr1_0.URR_STATUS_C,urr1_0.URR_USERNAME_C from T_USER_REGISTRATION_REQUEST urr1_0 where urr1_0.URR_USERNAME_C=? [42102-199]

@@ -123,4 +123,14 @@ angular.module('docs').controller('FileModalView', function ($uibModalInstance, 
   $scope.canDisplayPreview = function () {
     return $scope.file && $scope.file.mimetype !== 'application/pdf';
   };
+
+  $scope.openTranslateModal = function(file) {
+    $uibModal.open({
+      templateUrl: 'partial/docs/translate.modal.html',
+      controller: 'TranslateModal',
+      resolve: {
+        file: function() { return file; }
+      }
+    });
+  };
 });

@@ -337,6 +337,7 @@ public class UserDao {
             parameterMap.put("groupId", criteria.getGroupId());
         }
         
+        // 只排除已删除用户，不排除禁用用户
         criteriaList.add("u.USE_DELETEDATE_D is null");
         
         if (!criteriaList.isEmpty()) {

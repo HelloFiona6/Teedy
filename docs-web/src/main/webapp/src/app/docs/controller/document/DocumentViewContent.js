@@ -61,6 +61,19 @@ angular.module('docs').controller('DocumentViewContent', function ($scope, $root
   };
 
   /**
+   * Translate a file
+   */
+  $scope.openTranslateModal = function(file) {
+    $uibModal.open({
+      templateUrl: 'partial/docs/translate.modal.html',
+      controller: 'TranslateModal',
+      resolve: {
+        file: function() { return file; }
+      }
+    });
+  };
+
+  /**
    * Delete a file.
    */
   $scope.deleteFile = function (file) {
@@ -223,5 +236,15 @@ angular.module('docs').controller('DocumentViewContent', function ($scope, $root
         }
       }
     })
+  };
+
+  $scope.openTranslateModal = function(file) {
+    $uibModal.open({
+      templateUrl: 'partial/docs/translate.modal.html',
+      controller: 'TranslateModal',
+      resolve: {
+        file: function() { return file; }
+      }
+    });
   };
 });

@@ -16,7 +16,6 @@
         <input type="email" ng-model="register.email" required class="form-control">
       </div>
     </form>
-    <button class="btn btn-link" ng-click="openCheckStatus()">查询注册进度</button>
     <div ng-if="registerStatus">
       <div class="alert alert-info">{{registerStatus}}</div>
     </div>

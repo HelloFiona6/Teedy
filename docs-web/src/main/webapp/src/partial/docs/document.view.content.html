@@ -112,6 +112,13 @@
                 </li>
                 <li role="separator" class="divider"></li>
                 <li>
+                  <a href ng-click="openTranslateModal(file)">
+                    <span class="fas fa-language"></span>
+                    Translate
+                  </a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li>
                   <a href ngf-select
                      ngf-change="uploadNewVersion($files, file)"
                      ngf-multiple="false">
@@ -203,6 +210,14 @@
               </a>
             </li>
             <li role="separator" class="divider"></li>
+            <li role="separator" class="divider"></li>
+                <li>
+                  <a href ng-click="openTranslateModal(file)">
+                    <span class="fas fa-language"></span>
+                    Translate
+                  </a>
+                </li>
+                <li role="separator" class="divider"></li>
             <li>
               <a href ngf-select
                  ngf-change="uploadNewVersion($files, file)"

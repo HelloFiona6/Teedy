@@ -142,6 +142,12 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.tencentcloudapi</groupId>
+      <artifactId>tencentcloud-sdk-java-tmt</artifactId>
+      <version>3.1.1262</version>
+    </dependency>
+
   </dependencies>
 
   <build>

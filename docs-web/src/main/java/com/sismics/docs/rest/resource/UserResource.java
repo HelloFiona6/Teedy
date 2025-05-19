@@ -102,6 +102,8 @@ public class UserResource extends BaseResource {
         user.setEmail(email);
         user.setStorageQuota(storageQuota);
         user.setOnboarding(true);
+        // user.setDisableDate(new Date()); // 关键：注册即禁用
+
 
         // Create the user
         UserDao userDao = new UserDao();
@@ -120,6 +122,54 @@ public class UserResource extends BaseResource {
                 .add("status", "ok");
         return Response.ok().entity(response.build()).build();
     }
+
+    //user/register
+    @POST
+    @Path("register")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response registerRequest(
+            @FormParam("username") String username,
+            @FormParam("password") String password,
+            @FormParam("email") String email) {
+
+        // Validate the input data
+        username = ValidationUtil.validateLength(username, "username", 3, 50);
+        ValidationUtil.validateUsername(username, "username");
+        password = ValidationUtil.validateLength(password, "password", 8, 50);
+        email = ValidationUtil.validateLength(email, "email", 1, 100);
+        ValidationUtil.validateEmail(email, "email");
+
+        System.out.println("------------register--------------");
+        // Create the user
+        User user = new User();
+        user.setRoleId(Constants.DEFAULT_USER_ROLE);
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setEmail(email);
+        user.setStorageQuota(1000L);
+        user.setOnboarding(true);
+        user.setDisableDate(new Date());  // 将账户设为已禁用状态表示待审批)
+
+        // Create the user
+        UserDao userDao = new UserDao();
+        try {
+            userDao.create(user, null);
+        } catch (Exception e) {
+            if ("AlreadyExistingUsername".equals(e.getMessage())) {
+                throw new ClientException("AlreadyExistingUsername", "Login already used", e);
+            } else {
+                throw new ServerException("UnknownError", "Unknown server error", e);
+            }
+        }
+
+        // Always return OK
+        JsonObjectBuilder response = Json.createObjectBuilder()
+                .add("status", "ok");
+        return Response.ok().entity(response.build()).build();
+    }
+    
+    
+    
 
     /**
      * Updates the current user informations.
@@ -305,6 +355,9 @@ public class UserResource extends BaseResource {
         }
         if (user == null) {
             throw new ForbiddenClientException();
+        }
+        if (user.getDisableDate() != null) {
+            throw new ClientException("UserDisabled", "Your account is not enabled yet. Please contact the administrator.");
         }
 
         // Two factor authentication

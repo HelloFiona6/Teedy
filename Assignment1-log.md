@@ -27,11 +27,3 @@
 5. 邮件模板
    位置：`docs-core/src/main/resources/email_template/`
 
-
-## 实现
-
-* 访客提交注册请求（POST /user/register_request）
-* 管理员获取所有 pending 请求（GET /user/register_request/list）
-* 管理员接受请求（POST /user/register_request/{id}/accept）
-* 管理员拒绝请求（POST /user/register_request/{id}/reject）
-* 访客/管理员查询请求状态（GET /user/register_request/{id}/status）

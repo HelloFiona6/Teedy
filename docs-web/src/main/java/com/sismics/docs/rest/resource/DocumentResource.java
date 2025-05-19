@@ -271,7 +271,7 @@ public class DocumentResource extends BaseResource {
         MetadataUtil.addMetadata(document, documentId);
 
         // Add files
-        if (Boolean.TRUE == files) {
+        if (Boolean.TRUE.equals(files)) {
             FileDao fileDao = new FileDao();
             List<File> fileList = fileDao.getByDocumentsIds(Collections.singleton(documentId));
 
@@ -494,7 +494,7 @@ public class DocumentResource extends BaseResource {
         FileDao fileDao = new FileDao();
         List<File> filesList = null;
         Map<String, Long> filesCountByDocument = null;
-        if (Boolean.TRUE == files) {
+        if (Boolean.TRUE.equals(files)) {
             filesList = fileDao.getByDocumentsIds(documentsIds);
         } else {
             filesCountByDocument = fileDao.countByDocumentsIds(documentsIds);
@@ -508,7 +508,7 @@ public class DocumentResource extends BaseResource {
 
             Long filesCount;
             Collection<File> filesOfDocument = null;
-            if (Boolean.TRUE == files) {
+            if (Boolean.TRUE.equals(files)) {
                 // Find files matching the document
                 filesOfDocument = CollectionUtils.select(filesList, file -> file.getDocumentId().equals(documentDto.getId()));
                 filesCount = (long) filesOfDocument.size();
@@ -523,7 +523,7 @@ public class DocumentResource extends BaseResource {
                     .add("file_count", filesCount)
                     .add("tags", createTagsArrayBuilder(tagDtoList));
 
-            if (Boolean.TRUE == files) {
+            if (Boolean.TRUE.equals(files)) {
                 JsonArrayBuilder filesArrayBuilder = Json.createArrayBuilder();
                 for (File fileDb : filesOfDocument) {
                     filesArrayBuilder.add(RestUtil.fileToJsonObjectBuilder(fileDb));

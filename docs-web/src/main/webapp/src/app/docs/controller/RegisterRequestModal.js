@@ -3,13 +3,13 @@ angular.module('docs').controller('RegisterRequestModal', function($scope, $uibM
   $scope.registerStatus = null;
 
   $scope.submitRegister = function() {
-    Restangular.one('user/register_request').customPOST(
+    Restangular.one('user/register').customPOST(
       $.param($scope.register),
       undefined,
       undefined,
       { 'Content-Type': 'application/x-www-form-urlencoded' }
     ).then(function(resp) {
-      $scope.registerStatus = "注册请求已提交，请等待管理员审核。您的请求ID：" + resp.id;
+      $scope.registerStatus = "注册请求已提交，请等待管理员审核。您的请求ID如下，记得保存：" + resp.id;
     }, function(err) {
       $scope.registerStatus = (err.data && err.data.message) ? err.data.message : "提交失败";
     });
