@@ -3,6 +3,14 @@
 </div>
 <div class="modal-body">
   <div class="form-group">
+    <label>文件名：</label>
+    <p>{{file.name}}</p>
+  </div>
+  <div class="form-group">
+    <label>文件ID：</label>
+    <p>{{file.id}}</p>
+  </div>
+  <div class="form-group">
     <label>原文语言：</label>
     <select class="form-control" ng-model="selectedSourceLang" ng-options="l.code as l.name for l in languages" disabled>
     </select>

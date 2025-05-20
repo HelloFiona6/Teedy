@@ -585,6 +585,7 @@ public class FileResource extends BaseResource {
         boolean decrypt;
         if (size != null) {
             if (size.equals("content")) {
+                System.out.println("data: "+file.getContent());
                 return Response.ok(Strings.nullToEmpty(file.getContent()))
                         .header(HttpHeaders.CONTENT_TYPE, "text/plain; charset=utf-8")
                         .build();

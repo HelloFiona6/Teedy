@@ -185,6 +185,7 @@ public class DocumentResource extends BaseResource {
         if (documentDto == null) {
             throw new NotFoundException();
         }
+        // System.out.println("doc get");
 
         JsonObjectBuilder document = createDocumentObjectBuilder(documentDto)
                 .add("creator", documentDto.getCreator())

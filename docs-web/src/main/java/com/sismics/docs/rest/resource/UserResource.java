@@ -139,7 +139,6 @@ public class UserResource extends BaseResource {
         email = ValidationUtil.validateLength(email, "email", 1, 100);
         ValidationUtil.validateEmail(email, "email");
 
-        System.out.println("------------register--------------");
         // Create the user
         User user = new User();
         user.setRoleId(Constants.DEFAULT_USER_ROLE);

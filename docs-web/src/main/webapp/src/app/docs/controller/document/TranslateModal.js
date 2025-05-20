@@ -1,6 +1,16 @@
 'use strict';
 
-angular.module('docs').controller('TranslateModal', function($scope, $uibModalInstance, file, Restangular, $rootScope) {
+angular.module('docs').controller('TranslateModal', function($scope, $uibModalInstance, file, Restangular, $rootScope, $stateParams) {
+  console.log('TranslateModal initialized with file:', file);
+  console.log('Document ID:', $stateParams.id);
+
+  // 检查文件对象是否有效
+  if (!file || !file.id) {
+    console.error('Invalid file object:', file);
+    $scope.error = '无效的文件对象';
+    return;
+  }
+
   // 支持的语言列表，可根据实际需求扩展
   $scope.languages = [
     { code: 'auto', name: '自动识别' },
@@ -13,6 +23,7 @@ angular.module('docs').controller('TranslateModal', function($scope, $uibModalIn
     // ...更多
   ];
 
+  $scope.file = file;
   $scope.selectedSourceLang = 'auto';
   $scope.selectedTargetLang = 'zh';
   $scope.translatedText = null;
@@ -20,21 +31,40 @@ angular.module('docs').controller('TranslateModal', function($scope, $uibModalIn
   $scope.error = null;
 
   $scope.translate = function() {
+    // 检查文件对象是否有效
+    if (!file || !file.id) {
+      console.error('Invalid file object in translate function:', file);
+      $scope.error = '无效的文件对象';
+      return;
+    }
+
     $scope.translating = true;
     $scope.error = null;
     $scope.translatedText = null;
 
-    // 调用后端API
-    Restangular.one('document', file.documentId || file.id)
+    console.log('Translating file:', file);
+    console.log('File ID:', file.id);
+    console.log('Document ID:', $stateParams.id);
+
+    // 构建请求数据
+    var requestData = {
+      fileId: file.id,
+      lang: $scope.selectedTargetLang,
+      userId: $rootScope.userInfo ? $rootScope.userInfo.id : null,
+      share: $stateParams.share
+    };
+    console.log('Request data:', requestData);
+
+    // 调用后端API，添加 fileId 参数
+    Restangular.one('document', $stateParams.id)
       .all('translate/auto')
-      .post({
-        lang: $scope.selectedTargetLang,
-        userId: $rootScope.userInfo ? $rootScope.userInfo.id : null
-      })
+      .post(requestData)
       .then(function(resp) {
+        console.log('Translation response:', resp);
         $scope.translatedText = resp.translatedText;
         $scope.translating = false;
       }, function(err) {
+        console.error('Translation error:', err);
         $scope.error = '翻译失败: ' + (err.data && err.data.message ? err.data.message : '未知错误');
         $scope.translating = false;
       });

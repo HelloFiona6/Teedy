@@ -64,11 +64,19 @@ angular.module('docs').controller('DocumentViewContent', function ($scope, $root
    * Translate a file
    */
   $scope.openTranslateModal = function(file) {
+    console.log('Opening translate modal for file:', file);
+    if (!file || !file.id) {
+      console.error('Invalid file object:', file);
+      return;
+    }
     $uibModal.open({
       templateUrl: 'partial/docs/translate.modal.html',
       controller: 'TranslateModal',
       resolve: {
-        file: function() { return file; }
+        file: function() { 
+          console.log('Resolving file for modal:', file);
+          return file; 
+        }
       }
     });
   };
@@ -236,15 +244,5 @@ angular.module('docs').controller('DocumentViewContent', function ($scope, $root
         }
       }
     })
-  };
-
-  $scope.openTranslateModal = function(file) {
-    $uibModal.open({
-      templateUrl: 'partial/docs/translate.modal.html',
-      controller: 'TranslateModal',
-      resolve: {
-        file: function() { return file; }
-      }
-    });
   };
 });

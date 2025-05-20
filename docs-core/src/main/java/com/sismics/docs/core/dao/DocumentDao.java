@@ -81,10 +81,12 @@ public class DocumentDao {
      * @return Document
      */
     public DocumentDto getDocument(String id, PermType perm, List<String> targetIdList) {
+        // System.out.println("getDocument: id="+ id + " perm=" + perm + " targetIdList=" + targetIdList);
         AclDao aclDao = new AclDao();
         if (!aclDao.checkPermission(id, perm, targetIdList)) {
             return null;
         }
+        // System.out.println("getDocument: pass check");
 
         EntityManager em = ThreadLocalContext.get().getEntityManager();
         StringBuilder sb = new StringBuilder("select distinct d.DOC_ID_C, d.DOC_TITLE_C, d.DOC_DESCRIPTION_C, d.DOC_SUBJECT_C, d.DOC_IDENTIFIER_C, d.DOC_PUBLISHER_C, d.DOC_FORMAT_C, d.DOC_SOURCE_C, d.DOC_TYPE_C, d.DOC_COVERAGE_C, d.DOC_RIGHTS_C, d.DOC_CREATEDATE_D, d.DOC_UPDATEDATE_D, d.DOC_LANGUAGE_C, d.DOC_IDFILE_C,");
@@ -104,6 +106,7 @@ public class DocumentDao {
         } catch (NoResultException e) {
             return null;
         }
+        // System.out.println("getDocument: pass get");
         
         DocumentDto documentDto = new DocumentDto();
         int i = 0;
