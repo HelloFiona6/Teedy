@@ -31,10 +31,12 @@ angular.module('docs').controller('TranslateModal', function($scope, $uibModalIn
   $scope.error = null;
 
   $scope.translate = function() {
-    // 检查文件对象是否有效
-    if (!file || !file.id) {
-      console.error('Invalid file object in translate function:', file);
-      $scope.error = '无效的文件对象';
+    if (!$scope.file || !$scope.file.id) {
+      $scope.error = "请选择要翻译的文件";
+      return;
+    }
+    if (!$scope.selectedTargetLang) {
+      $scope.error = "请选择目标语言";
       return;
     }
 
@@ -42,32 +44,16 @@ angular.module('docs').controller('TranslateModal', function($scope, $uibModalIn
     $scope.error = null;
     $scope.translatedText = null;
 
-    console.log('Translating file:', file);
-    console.log('File ID:', file.id);
-    console.log('Document ID:', $stateParams.id);
-
-    // 构建请求数据
-    var requestData = {
-      fileId: file.id,
-      lang: $scope.selectedTargetLang,
-      userId: $rootScope.userInfo ? $rootScope.userInfo.id : null,
-      share: $stateParams.share
-    };
-    console.log('Request data:', requestData);
-
-    // 调用后端API，添加 fileId 参数
-    Restangular.one('document', $stateParams.id)
-      .all('translate/auto')
-      .post(requestData)
-      .then(function(resp) {
-        console.log('Translation response:', resp);
-        $scope.translatedText = resp.translatedText;
-        $scope.translating = false;
-      }, function(err) {
-        console.error('Translation error:', err);
-        $scope.error = '翻译失败: ' + (err.data && err.data.message ? err.data.message : '未知错误');
-        $scope.translating = false;
-      });
+    Restangular.one('document/autoTranslate').post('', {
+      fileId: $scope.file.id,
+      targetLang: $scope.selectedTargetLang
+    }).then(function(response) {
+      $scope.translating = false;
+      $scope.translatedText = response.translatedText;
+    }, function(error) {
+      $scope.translating = false;
+      $scope.error = error.data.message || "翻译失败";
+    });
   };
 
   $scope.close = function() {

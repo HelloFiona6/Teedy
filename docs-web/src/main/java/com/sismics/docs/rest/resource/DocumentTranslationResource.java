@@ -27,6 +27,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.List;
+import java.nio.charset.StandardCharsets;
+import org.apache.commons.lang3.StringUtils;
 
 @Path("/document")
 public class DocumentTranslationResource extends BaseResource {
@@ -35,103 +37,54 @@ public class DocumentTranslationResource extends BaseResource {
      * 自动提取文档内容并翻译
      */
     @POST
-    @Path("{id: [a-z0-9\\-]+}/translate/auto")
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("autoTranslate")
     public Response autoTranslate(
-            @PathParam("id") String documentId,
             @FormParam("fileId") String fileId,
-            @FormParam("lang") String targetLang,
-            @FormParam("userId") String userId,
-            @FormParam("share") String shareId) throws Exception {
-        
+            @FormParam("targetLang") String targetLang,
+            @FormParam("share") String shareId) {
         if (!authenticate()) {
             throw new ForbiddenClientException();
         }
 
         // 验证参数
-        if (fileId == null || fileId.trim().isEmpty()) {
+        if (StringUtils.isEmpty(fileId)) {
             throw new ClientException("ValidationError", "请选择要翻译的文件");
         }
-        if (targetLang == null || targetLang.trim().isEmpty()) {
+        if (StringUtils.isEmpty(targetLang)) {
             throw new ClientException("ValidationError", "请选择目标语言");
         }
-        System.out.println("auto: pass valid");
-        
-        // 获取文档
-        DocumentDao documentDao = new DocumentDao();
-        DocumentDto documentDto = documentDao.getDocument(documentId, PermType.READ, getTargetIdList(shareId));
-        if (documentDto == null) {
-            throw new NotFoundException("Document not found");
-        }
-        System.out.println("auto: pass doc");
 
-        // 获取指定的文件
-        FileDao fileDao = new FileDao();
-        File file = fileDao.getFile(fileId);
-        if (file == null || !file.getDocumentId().equals(documentId)) {
-            throw new NotFoundException("File not found in document");
+        // 获取文件
+        File file = findFile(fileId, shareId);
+        if (file == null) {
+            throw new ClientException("FileNotFound", "文件不存在");
         }
-        checkFileAccessible(shareId, file);
-        System.out.println("auto: pass get file");
-        
+
+        // 获取文件创建者
+        UserDao userDao = new UserDao();
+        User user = userDao.getById(file.getUserId());
+        if (user == null) {
+            throw new ClientException("UserNotFound", "文件创建者不存在");
+        }
+
+        // 解密文件内容
+        String content;
+        try (InputStream fileInputStream = Files.newInputStream(DirectoryUtil.getStorageDirectory().resolve(fileId));
+             InputStream decryptedStream = EncryptionUtil.decryptInputStream(fileInputStream, user.getPrivateKey())) {
+            content = new String(ByteStreams.toByteArray(decryptedStream), StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            throw new ClientException("DecryptionError", "解密文件内容失败", e);
+        }
+
+        // 调用腾讯云翻译API
         try {
-            // 获取文件内容
-            String content;
-            java.nio.file.Path storedFile = DirectoryUtil.getStorageDirectory().resolve(file.getId());
-            if (!Files.exists(storedFile)) {
-                throw new ClientException("FileNotFound", "File not found in storage");
-            }
-
-            // 创建临时文件
-            java.nio.file.Path tempFile = AppContext.getInstance().getFileService().createTemporaryFile();
-            
-            // 获取文件创建者
-            UserDao userDao = new UserDao();
-            User user = userDao.getById(file.getUserId());
-            if (user == null) {
-                throw new ClientException("UserNotFound", "File creator not found");
-            }
-
-            // 解密文件到临时文件
-            try (InputStream fileInputStream = Files.newInputStream(storedFile);
-                 InputStream decryptedStream = EncryptionUtil.decryptInputStream(fileInputStream, user.getPrivateKey());
-                 OutputStream tempOutputStream = Files.newOutputStream(tempFile)) {
-                ByteStreams.copy(decryptedStream, tempOutputStream);
-            }
-
-            // 从临时文件提取内容
-            content = DocumentTextExtractor.extractText(tempFile.toFile(), file.getMimeType(), file.getUserId());
-
-            if (content == null || content.trim().isEmpty()) {
-                throw new ClientException("EmptyContent", "No text content could be extracted from the file. The file might be empty or contain only images.");
-            }
-            
-            System.out.println("auto: pass content extraction, content length=" + content.length());
-            
-            // 调用腾讯翻译
-            String secretId = System.getenv("TENCENT_SECRET_ID");   ;
-            String secretKey = System.getenv("TENCENT_SECRET_KEY");
-            String translatedText = TencentTranslateUtil.translate(content, "auto", targetLang, secretId, secretKey);
-            
-            // 构建响应
-            JsonObjectBuilder response = Json.createObjectBuilder()
-                .add("translatedText", translatedText);
-            
-            return Response.ok(response.build().toString()).build();
-            
-        } catch (IOException e) {
-            String errorMessage = e.getMessage();
-            if (errorMessage.contains("Unsupported file type")) {
-                throw new ClientException("UnsupportedFileType", errorMessage);
-            } else if (errorMessage.contains("Invalid PDF")) {
-                throw new ClientException("InvalidPDF", "The PDF file appears to be corrupted or invalid");
-            } else {
-                System.err.println("Error extracting text: " + errorMessage);
-                throw new ClientException("ExtractionError", "Error extracting text from file: " + errorMessage);
-            }
-        } catch (TencentCloudSDKException e) {
-            throw new ClientException("TranslateError", e.getMessage());
+            String translatedText = TencentTranslateUtil.translate(content, "auto", targetLang, System.getenv("TENCENT_SECRET_ID"), System.getenv("TENCENT_SECRET_KEY"));
+            return Response.ok(Json.createObjectBuilder()
+                    .add("translatedText", translatedText)
+                    .build())
+                    .build();
+        } catch (Exception e) {
+            throw new ClientException("TranslationError", "翻译失败: " + e.getMessage(), e);
         }
     }
 
